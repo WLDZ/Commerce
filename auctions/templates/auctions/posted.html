@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+
+
+
+{% block body %}
+    <h2>Bid Placed</h2>
+
+ 
+<div style="text-align:center">
+
+
+<h4>Listing:{{title}}</h4> 
+
+<br>
+<img src= {{url}} alt="Image Not Available" width="225" height="150">
+<br>
+<h4>Description: </h4>  <p>{{description}} {{discription}} </p>
+<h3>Your Bid: ${{price}}</h4> 
+
+</div>
+<br>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+
+
+<h2 style="color:blue">Currenlty Watching</h2>
+
+
+{%  for lst in listings  %}
+
+{% if lst.listing.status == "CL" %}
+
+<h4 style="color:red">This listing is no longer available</h4> 
+
+{% else %}
+
+
+<div style="text-align:center">
+
+    {% csrf_token %}
+  
+<h4 style="color:green">Listing Name: {{lst.listing.title}}</h4> 
+<br><br>
+<h4 style="color:green">Listing Price: ${{lst.listing.price}}</h4> 
+<br><br>
+<img src= {{lst.listing.url}} alt="Image Not Available"  width="225" height="150">
+<br><br>
+
+<form action="{% url 'listing_details' %}" method="POST">
+    
+    {% csrf_token %}
+    <button name="view_details" type="submit" value={{lst.listing.id}}>Go To Listing</button>
+    
+</form>
+
+
+
+
+</div>
+
+
+{% endif %}
+
+<div style="text-align:center">
+
+    <form action="remove_from_watchlist" method="POST">
+        {% csrf_token %} 
+    <input type="hidden"  name="id_lst" value={{lst.listing.id}}>
+    <button type="submit" name="watchlist_remove"  value ="Remove">Remove From Watchlist</button>
+    </form>
+</div>
+
+<br> </br>
+<br> </br>
+
+
+{% endfor %}
+
+
+{% endblock %}

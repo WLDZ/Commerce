@@ -1,0 +1,33 @@
+{% extends "auctions/layout.html" %}
+
+
+
+{% block body %}
+    <h2 style="color:blue">Active Listings</h2>
+
+ {%  for listing in listings  %}
+
+<div style="text-align:center">
+
+
+<h4>{{listing.title}}  - ${{listing.price}} </h4> 
+
+<br>
+<img src= {{listing.url}} alt="Image Not Available" width="225" height="150">
+<br>
+
+<br>
+
+<form action="{% url 'listing_details' %}" method="POST">
+    
+    {% csrf_token %}
+    <button name="view_details" type="submit" value={{listing.id}}>Detials</button>
+</form>
+
+</div>
+<br>
+
+{% endfor %}
+
+
+{% endblock %}

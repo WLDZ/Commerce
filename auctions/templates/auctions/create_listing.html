@@ -1,0 +1,95 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+
+
+
+ <div style="width:300px; margin:0 auto;">
+    <h2 style="color:blue;">New Listing</h2>
+ </div>
+
+ <br>
+ <br>
+
+
+ 
+<div >
+
+
+<form action ="{% url 'new_listing' %}" method="POST">
+
+    {% csrf_token %}
+
+
+    <h3 style="color:green;">Listing Name</h3>
+    {{title}}
+    <br>
+    <br>
+
+    <div  style="width:20%">
+        <h3 style="color:green">Listing Discription</h3>
+        {{discription}}
+    </div>
+
+    <br>
+    <h3 style="color:green">Price</h3>
+    {{price.value}} <br><br>
+    
+    <label for="images"> <h3 style="color:green">Image Url</h3> </label><br>
+    <input type="url" id="images" name="images"><br><br>
+
+
+    
+     
+        <label for="cars">Choose a listing catagory:</label>
+        <select name="catagory" id="catagory">
+            <option value="Appliances">Appliances</option>
+            <option value="Apps & Games">Apps & Games</option>
+            <option value="Arts, Crafts, & Sewing">Arts, Crafts, & Sewing</option>
+            <option value="Automotive Parts & Accessories">Automotive Parts & Accessories</option>
+            <option value="Baby">Baby</option>
+            <option value="Beauty & Personal Care">Beauty & Personal Care</option>
+            <option value="Books">Books</option>
+            <option value="CDs & Vinyl">CDs & Vinyl</option>
+            <option value="Cell Phones & Accessories">Cell Phones & Accessories</option>
+            <option value="Clothing, Shoes and Jewelry">Clothing, Shoes and Jewelry</option>
+            <option value="Collectibles & Fine Art">Collectibles & Fine Art</option>
+            <option value="Computers">Computers</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Garden & Outdoor">Garden & Outdoor</option>
+            <option value="Grocery & Gourmet Food">Grocery & Gourmet Food</option>
+            <option value="Handmade">Handmade</option>
+            <option value="Health, Household & Baby Care">Health, Household & Baby Care</option>
+            <option value="Home & Kitchen">Home & Kitchen</option>
+            <option value="Industrial & Scientific">Industrial & Scientific</option>
+            <option value="Kindle">Kindle</option>
+            <option value="Luggage & Travel Gear">Luggage & Travel Gear</option>
+            <option value="Movies & TV">Movies & TV</option>
+            <option value="Musical Instruments">Musical Instruments</option>
+            <option value="Office Products">Office Products</option>
+            <option value="Pet Supplies">Pet Supplies</option>
+            <option value="Sports & Outdoors">Sports & Outdoors</option>
+            <option value="Tools & Home Improvement">Tools & Home Improvement</option>
+            <option value="Toys & Games">Toys & Games</option>
+            <option value="Video Games">Video Games</option>
+           
+        </select>
+        <br><br>
+
+
+
+
+
+
+
+
+    <input type="submit" value="Create New Listing" name ="new_listing_form" style="background-color: #008CBA; color: white;padding: 15px 32px;">
+    </form>  
+
+
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+ {%  for listing in listings  %}
+
+<div style="text-align:center">
+
+
+<h4>Listing: {{listing.title}}</h4>
+
+<br>
+<img src= {{listing.url}} alt="Image Not Available" width="225" height="150">
+<br>
+<h4>Description: </h4>  <p>{{listing.description}} </p>
+<h3>Price: {{listing.price}}  </h4>
+<br>
+
+
+
+</div>
+<br>
+
+{% endfor %}
+
+
+{% endblock %}
