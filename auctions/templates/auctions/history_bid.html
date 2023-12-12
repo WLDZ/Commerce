@@ -22,7 +22,7 @@
 
 <h3>Your Bid: ${{win.bid_value}}  </h4>
 
-<form action="{% url 'listing_details' %}" method="POST">  
+<form action="{% url 'listing_details' listingid=win.listing.id %}" method="POST">  
     {% csrf_token %}
     <button name="view_details" type="submit" value={{win.listing.id}}>Detials</button>
 </form>

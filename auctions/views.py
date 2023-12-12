@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .util import *
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 
@@ -26,73 +27,46 @@ class NewValueForm(forms.Form):
 
 
 
-'''
-def new_lisitng(request): 
-    if not request.user.is_authenticated: 
-         return HttpResponse("Please Sign in")  
-    
-    
-    return render(request, "auctions/create_listing.html", {
-                    "discription" : NewTextForm(auto_id="id_%s"), # loads the create page with just textarea in it. 
-                    "title": NewTaskForm(auto_id="id_%s_2"),
-                    "price":NewValueForm(auto_id="pid_%s_1")
-        })'''
-
 @login_required(login_url='/login')
 def new_lisitng(request):
+    if not request.user.is_authenticated:
+         return HttpResponse("Please Sign in to post a listing") 
+    if request.method == "POST":
+            id_user = request.user.id 
+            categoryxx = request.POST['category'] 
+            image_url = request.POST.get("images")
+            input_title = request.POST['title']
+            input_description = request.POST.get('description')  
+            input_price = request.POST['price']
+            
 
-    if request.method == "POST": # If the form has been submitted...
-
-        current_user = request.user
-        id_user = current_user.id 
-
-        
-        title = NewTaskForm(request.POST)
-        price = NewValueForm(request.POST)
-        image_url =  request.POST.get("images")
-        description = NewTextForm(request.POST)
-
-        cataogryx =  request.POST['catagory']
-
-      
-        if title.is_valid() and price.is_valid() and description.is_valid() :
-            input_title =  title.cleaned_data["title"]
-            input_price = price.cleaned_data["value"]
-            input_description = description.cleaned_data["description"]
-
-            save_listing = Listing.objects.create(title= input_title,description= input_description,user_id = id_user,price = input_price, url =  image_url,catagory= cataogryx)
+            save_listing = Listing.objects.create(title= input_title,description= input_description,user_id = id_user,price = input_price, url =  image_url,catagory= categoryxx)
             save_listing.save
             return render(request,"auctions/posted.html",{
 
-                "discription" :input_description, # loads the create page with just textarea in it. 
-                "title":input_title,
-                "price":input_price,
-                "url": image_url,
-                "catagory":cataogryx
+                    "discription" :input_description, # loads the create page with just textarea in it. 
+                    "title":input_title,
+                    "price":input_price,
+                    "url": image_url,
+                    "catagory":categoryxx
+                    
+                })
                 
-            })
-            
-        else: 
-            return render(request, "auctions/create_listing.html",{
-                    "discription" : title, # loads the create page with just textarea in it. 
-                    "title":title ,
-                    "price":price
-        })
+    else: 
+        return render(request, "auctions/create_listing.html")
 
-    if not request.user.is_authenticated:
-         return HttpResponse("Please Sign in to post a listing") 
+    
          
-
-    return render(request, "auctions/create_listing.html", {
-                    "discription" : NewTextForm(auto_id="id_%s"), # loads the create page with just textarea in it. 
-                    "title": NewTaskForm(auto_id="id_%s_2"),
-                    "price":NewValueForm(auto_id="pid_%s_1")
-        })
-
 def index(request):
-        return render(request, "auctions/index.html",{
-            "listings":Listing.objects.filter(status = "AT")
-            })
+    all_active_listings= Listing.objects.filter(status = "AT")
+        
+    lisitng_paginator = Paginator(all_active_listings,10)
+    page_num = request.GET.get('page')
+    page = lisitng_paginator.get_page(page_num)
+
+    return render(request, "auctions/index.html",{
+        "listings":page
+        })
 
 
 @login_required(login_url='/login')
@@ -171,55 +145,66 @@ def bid_history(request):
 
 
 
-def listing_deatils(request):
+def listing_deatils(request, listingid):
     current_user = request.user
-    id_user = current_user.id 
+    id_user = current_user.id
+
+    # Fetch listing details outside the if block
+    lst_detail = Listing.objects.get(id=listingid)
+    usr_comments = Comment.objects.filter(listing_id=listingid)
+    bid_count = Bid.objects.filter(listing_id=listingid).count()
+
+    watch_ind = False
+    bid_won_price = None
+    if get_user_watchlist(id_user, listingid) is None:
+        watch_ind = True
+
+    closed_ind = False
+    if lst_detail.status == "CL":
+        closed_ind = True
+        bid_won_price = Bid.objects.filter(listing_id=listingid, user=id_user, win_status="WN")
+        bid_won_price = bid_won_price[0].bid_value
+
+    images = ["https://picsum.photos/200/300", "https://picsum.photos/200/300"]
+    images.insert(0, lst_detail.url)
 
     if request.method == "POST":
-        lst_id =  request.POST['view_details'] 
+        # Handle POST request logic
+        lst_id = listingid
+        item_id = lst_detail
+        item_owner_id = lst_detail.user_id
+        item_onwer = (id_user == item_owner_id)
 
-        item_id = Listing.objects.get(id=lst_id)
-        item_owner_id = item_id.user_id
-        item_onwer = False
-
-        if (id_user == item_owner_id):
-             item_onwer = True
-        
-        lst_detail = Listing.objects.get(id=lst_id)
-
-        usr_comments = Comment.objects.filter(listing_id=lst_id)
-
-        bid_count = Bid.objects.filter(listing_id=lst_id).count()
-
-        watch_ind = False
-        bid_won_price = None
-        if (get_user_watchlist(id_user,lst_id) == None):
-            watch_ind = True
-
-        closed_ind = False
-        if (lst_detail.status == "CL"):
-            closed_ind = True
-            bid_won_price = Bid.objects.filter(listing_id=lst_id,user=id_user,win_status= "WN")
-            bid_won_price = bid_won_price[0].bid_value
-
-        return render(request, "auctions/user_listings.html",{
-        "msg": lst_id,
-        "title":lst_detail.title,
-        "description" : lst_detail.description,
-        "url": lst_detail.url,
-        "price": lst_detail.price,
-        "comments": usr_comments,
-        "totalbids":bid_count,
-        "watch_ind":watch_ind,
-        "owner_ind":item_onwer,
-        "closed_ind":closed_ind,
-        "bid_won_price":bid_won_price
-
-  
+        return render(request, "auctions/user_listings.html", {
+            "msg": lst_id,
+            "title": lst_detail.title,
+            "description": lst_detail.description,
+            "url": images,
+            "price": lst_detail.price,
+            "comments": usr_comments,
+            "totalbids": bid_count,
+            "watch_ind": watch_ind,
+            "owner_ind": item_onwer,
+            "closed_ind": closed_ind,
+            "bid_won_price": bid_won_price
+        })
+    else:
+        # Handle GET request logic
+        return render(request, "auctions/user_listings.html", {
+            "msg": listingid,
+            "title": lst_detail.title,
+            "description": lst_detail.description,
+            "url": images,
+            "price": lst_detail.price,
+            "comments": usr_comments,
+            "totalbids": bid_count,
+            "watch_ind": watch_ind,
+            "owner_ind": False,  # No need to check again for GET request
+            "closed_ind": closed_ind,
+            "bid_won_price": bid_won_price
         })
 
-    else:
-        return render(request, "auctions/user_listings.html")
+
 
 
 @login_required(login_url='/login')
@@ -407,14 +392,13 @@ def remove_from_watchlist(request):
         if request.method == "POST":
             lst_id =  request.POST['id_lst']
 
-            print(lst_id)
-
+    
         if (request.POST['watchlist_remove'] =="Remove"):
               xx=   Watchlist.objects.filter(user_id =id_user,listing_id= lst_id)
               xx.delete()
 
-              #message needs to be displayed
-              return HttpResponseRedirect(reverse("index"))
+              messages.success(request, 'Removed from your wishlist')
+              return render(request, "auctions/success.html")
 
 
 def my_watchlist(request):
@@ -460,3 +444,37 @@ def post_comment(request):
         messages.success(request, 'Your comment has been posted!')
       
     return render(request, "auctions/success.html")
+
+
+
+@login_required(login_url='/login')
+def test_page(request):   
+    if request.method == "POST":
+        id_user = request.user.id 
+        categoryxx = request.POST['category'] 
+        image_url = request.POST.get("images")
+        input_title = request.POST['title']
+        input_description = request.POST.get('description')  
+        input_price = request.POST['price']
+        
+
+        save_listing = Listing.objects.create(title= input_title,description= input_description,user_id = id_user,price = input_price, url =  image_url,catagory= categoryxx)
+        save_listing.save
+        return render(request,"auctions/posted.html",{
+
+                "discription" :input_description, # loads the create page with just textarea in it. 
+                "title":input_title,
+                "price":input_price,
+                "url": image_url,
+                "catagory":categoryxx
+                
+            })
+            
+    else: 
+        return render(request, "auctions/test.html")
+
+    
+       
+
+
+

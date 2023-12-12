@@ -1,33 +1,64 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
+
 
 
 
 {% block body %}
-    <h2 style="color:blue">Active Listings</h2>
+{% comment %} <style>
+    body {
+      background-color: #006666 !important;
+    }
+    .card-body{
+        background-color:  #FFDAB9;
+    }
+  </style> {% endcomment %}
 
- {%  for listing in listings  %}
-
-<div style="text-align:center">
-
-
-<h4>{{listing.title}}  - ${{listing.price}} </h4> 
-
-<br>
-<img src= {{listing.url}} alt="Image Not Available" width="225" height="150">
-<br>
-
-<br>
-
-<form action="{% url 'listing_details' %}" method="POST">
-    
-    {% csrf_token %}
-    <button name="view_details" type="submit" value={{listing.id}}>Detials</button>
-</form>
-
+  <div class="container mt-4">
+    <div class="row row-cols-2 row-cols-md-5 g-4">
+        {% for listing in listings %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{{ listing.url }}" class="card-img-top img-fluid"
+                         alt="Image Not Available" 
+                         style="object-fit:contain">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" style="font-size: 1rem;">{{ listing.title }}</h5>
+                        <p class="card-text" style="font-size: 0.8rem;">${{ listing.price }}</p>
+                        <form action="{% url 'listing_details' listingid=listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" name="view_details" type="submit" value="{{ listing.id }}">
+                                Details</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
-<br>
-
-{% endfor %}
 
 
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center my-4">
+      {% if listings.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="{% url 'index' %}?page={{ listings.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo; Previous</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for page_num in listings.paginator.page_range %}
+        <li class="page-item {% if page_num == listings.number %}active{% endif %}">
+          <a class="page-link" href="{% url 'index' %}?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+      {% endfor %}
+      {% if listings.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{% url 'index' %}?page={{ listings.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">Next &raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
 {% endblock %}

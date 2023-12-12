@@ -34,7 +34,7 @@
 <h3>Price: ${{listing.price}}  </h4>
 <br>
 
-<form action="{% url 'listing_details' %}" method="POST">
+<form action="{% url 'listing_details' listingid=listing.id %}" method="POST">
     {% csrf_token %}
     <button name="view_details" type="submit" value={{listing.id}}>Detials</button>
 </form>

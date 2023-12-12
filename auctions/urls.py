@@ -9,7 +9,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path ("new_listing",views.new_lisitng,name = "new_listing"),
     path ("user_listing",views.user_listing,name = "user_listing"),
-    path ("listing_details",views.listing_deatils,name = "listing_details"),
+    path ("listing_details/<int:listingid>/",views.listing_deatils,name = "listing_details"),
     path ("add_to_watchlist",views.add_to_watchlist,name = "add_to_watchlist"),
     path ("my_watchlist",views.my_watchlist,name = "my_watchlist"),
     path ("posted",views.place_bid,name = "posted"),
@@ -19,7 +19,8 @@ urlpatterns = [
     path ("bid_history_all",views.bid_history,name = "bid_history_all"),
     path ("search",views.search,name = "search"),
     path ("results",views.search_results,name = "results"),
-    path ("comment",views.post_comment,name = "comment")
+    path ("comment",views.post_comment,name = "comment"),
+    path ("test",views.test_page,name = "test")
 
 
    
