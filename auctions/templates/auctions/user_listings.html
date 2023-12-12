@@ -3,50 +3,11 @@
 
 
 {% block body %}
+<head>
+    <link href="{% static 'auctions/custom.css' %}" rel="stylesheet">
+</head>
 
 
-<style>
-    
-    .custom-container {
-        max-width: 600px; /* Adjust the value based on your design */
-        margin: 0 auto;   /* Center the container */
-        
-    }
-    
-    
-
-    .modal img {
-        max-width: 100%;
-        max-height: 80vh; /* Limit the height to 80% of the viewport height */
-        margin: auto;}
-
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-        background-color: darkcyan; /* Change this to the desired color */
-    }
-
-    /* Optionally, you can also change the color of the arrow itself */
-    .carousel-control-prev-icon::before,
-    .carousel-control-next-icon::before {
-        color: white; /* Change this to the desired color */
-    }
-
-    .closed-message {
-        color: coral;
-        font-family:'Lucida Handwriting';
-
-    }
-    {% comment %} #20B2AA {% endcomment %}
-    .h4heading{
-        color:seagreen;
-        font-family: 'Courier New', Courier, monospace;
-    
-    }
-
-    
-     
-      
-</style>
 
 <ul class="messages">
     {% for message in messages %}

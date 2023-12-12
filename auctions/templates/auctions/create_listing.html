@@ -1,35 +1,39 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
 
 {% block body %}
+<head>
+    <link href="{% static 'auctions/custom.css' %}" rel="stylesheet">
+</head>
 
 <div class="container mt-5">
-    <h2 class="text-primary">New Listing</h2>
+    <h2 class="closed-message" style="text-align: center;">Create a New Listing</h2>
 
     <form action="{% url 'new_listing' %}" method="POST">
         {% csrf_token %}
 
         <div class="mb-3">
-            <label for="title" class="form-label">Listing Name</label>
+            <label for="title" class="form-label-custom">Listing Name</label>
             <input type="text" id="title" name="title" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Listing Description</label>
+            <label for="description" class="form-label-custom">Listing Description</label>
             <textarea id="description" name="description" class="form-control" required></textarea>
         </div>
 
         <div class="mb-3">
-            <label for="price" class="form-label">Price</label>
+            <label for="price" class="form-label-custom">Price</label>
             <input type="number" id="price" name="price" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label for="images" class="form-label">Image URL</label>
+            <label for="images" class="form-label-custom">Image URL</label>
             <input type="url" id="images" name="images" class="form-control">
         </div>
 
         <div class="mb-3">
-            <label for="category" class="form-label">Choose a Listing Category</label>
+            <label for="category" class="form-label-custom">Choose a Listing Category</label>
             <select id="category" name="category" class="form-select" required>
                 <<option value="Appliances">Appliances</option>
                 <option value="Apps & Games">Apps & Games</option>
@@ -62,8 +66,9 @@
                 <option value="Video Games">Video Games</option>
             </select>
         </div>
-
-        <button type="submit" class="btn btn-primary">Create New Listing</button>
+        <div class="mb-3 text-center">
+            <button type="submit" class="btn btn-primary" style="background-color:#198754;">Save</button>
+        </div>
     </form>
 </div>
 
