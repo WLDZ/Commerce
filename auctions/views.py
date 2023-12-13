@@ -412,15 +412,39 @@ def my_watchlist(request):
 
 
 def search(request):
+    categories = [
+    "Appliances",
+    "Apps & Games",
+    "Arts, Crafts, & Sewing",
+    "Automotive Parts & Accessories",
+    "Beauty & Personal Care",
+    "Books",
+    "Cell Phones & Accessories",
+    "Clothing, Shoes and Jewelry",
+    "Computers",
+    "Garden & Outdoor",
+    "Grocery & Gourmet Food",
+    "Handmade",
+    "Kindle",
+    "Luggage & Travel Gear",
+    "Office Products",
+    "Pet Supplies",
+    "Sports & Outdoors",
+    "Tools & Home Improvement",
+    "Toys & Games"]
 
-    return render(request, "auctions/search.html")
+
+    return render(request, "auctions/search.html",{
+            "categories": categories
+            })
 
 
 def search_results(request):
     if request.method == "POST":
-            cataogry =  request.POST['catagory']
+            category =  request.POST['category']
+            print(category)
 
-            search_result = Listing.objects.filter(catagory=cataogry)
+            search_result = Listing.objects.filter(catagory=category)
 
             no_results = False
             if(len(search_result)==0):
@@ -449,28 +473,7 @@ def post_comment(request):
 
 @login_required(login_url='/login')
 def test_page(request):   
-    if request.method == "POST":
-        id_user = request.user.id 
-        categoryxx = request.POST['category'] 
-        image_url = request.POST.get("images")
-        input_title = request.POST['title']
-        input_description = request.POST.get('description')  
-        input_price = request.POST['price']
-        
-
-        save_listing = Listing.objects.create(title= input_title,description= input_description,user_id = id_user,price = input_price, url =  image_url,catagory= categoryxx)
-        save_listing.save
-        return render(request,"auctions/posted.html",{
-
-                "discription" :input_description, # loads the create page with just textarea in it. 
-                "title":input_title,
-                "price":input_price,
-                "url": image_url,
-                "catagory":categoryxx
-                
-            })
-            
-    else: 
+    
         return render(request, "auctions/test.html")
 
     
