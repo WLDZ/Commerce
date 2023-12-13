@@ -4,42 +4,66 @@
 
 {% block body %}
 
-    <h2 style="color:blue">Biddings Won</h2>
+<h2 style="color: coral;font-family:'Lucida Handwriting';text-align: center;margin-top: 10px;">
+    Biddings Won</h2>
 
 {% if hist_ind %}
 
- {%  for win in biddings_won  %}
-
-<div style="text-align:center">
 
 
-<h4>Listing: {{win.listing.title}}</h4> 
-<br>
-<img src= {{win.listing.url}} alt="Image Not Available" width="225" height="150">
-<br>
-<h3>Price: ${{win.listing.price}}  </h4>
-<br>
-
-<h3>Your Bid: ${{win.bid_value}}  </h4>
-
-<form action="{% url 'listing_details' listingid=win.listing.id %}" method="POST">
-    
-    {% csrf_token %}
-    <button name="view_details" type="submit" value={{win.listing.id}}>Detials</button>
-</form>
-
+<div class="container mt-4">
+    <div class="row row-cols-2 row-cols-md-5 g-4">
+            {%  for win in biddings_won  %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{{ placed.listing.url }}" class="card-img-top img-fluid"
+                         alt="Image Not Available" 
+                         style="object-fit:contain">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" style="font-size: 1rem;">{{ win.listing.title }}</h5>
+                        <p class="card-text" style="font-size: 0.8rem;">You bid ${{ win.bid_value }}</p>
+                        <p class="card-text" style="font-size: 0.8rem;">Bidding base price ${{ win.listing.price }}</p>
+                        <form action="{% url 'listing_details' listingid=win.listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" name="view_details" type="submit" value="{{ win.listing.id }}">
+                                Details</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
-<br>
-
-{% endfor %}
 
 
 {% else %}
 
-<h5 style="color:red">You have never won a bidding</h5> 
+<h5 style="color:seagreen;font-family: 'Courier New', Courier, monospace;">You have never won a bidding</h5> 
 
 {% endif %}
 
-
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center my-4">
+      {% if biddings_won.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="{% url 'bid_history'%}?page={{ biddings_won.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo; Previous</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for page_num in biddings_won.paginator.page_range %}
+        <li class="page-item {% if page_num == biddings_won.number %}active{% endif %}">
+          <a class="page-link" href="{% url 'bid_history' %}?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+      {% endfor %}
+      {% if biddings_won.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{% url 'bid_history' %}?page={{ biddings_won.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">Next &raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
 
 {% endblock %}
