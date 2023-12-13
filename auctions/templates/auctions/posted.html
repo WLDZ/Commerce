@@ -3,24 +3,45 @@
 
 
 {% block body %}
-    <h2>Bid Placed</h2>
+    
 
- 
-<div style="text-align:center">
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h1 class="d-lg-block text-left" style="color: coral;font-family:'Lucida Handwriting';">Sucessfully placed the bid</h1>
+        </div>
+    </div>
 
+    <div class="container custom-container mt-5">
+        <h4 class="d-lg-block text-left" style="color: seagreen;">{{ title }}</h4>
+        <h4 class="d-lg-block text-left" style="color: coral;">Your Bid: ${{price}}</h4>
+        <div class="border p-3">
+            <div id="Images" class="carousel slide">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#Images" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ url }}" class="d-block mx-auto img-fluid" alt="Image not Available">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#Images" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#Images" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
-<h4>Listing:{{title}}</h4> 
-
-<br>
-<img src= {{url}} alt="Image Not Available" width="225" height="150">
-<br>
-<h4>Description: </h4>  <p>{{description}} {{discription}} </p>
-<h3>Your Bid: ${{price}}</h4> 
-
+    <div class="description mt-4">
+        <h3 style="color: seagreen;">Description</h3>
+        <p>{{ description }}</p>
+    </div>
 </div>
-<br>
-
-
 
 
 {% endblock %}
