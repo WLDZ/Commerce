@@ -2,61 +2,52 @@
 
 
 {% block body %}
-
-
 <h2 style="color: coral;font-family:'Lucida Handwriting';text-align: center;margin-top: 10px;">
     Currenlty Watching</h2>
 
 
-{%  for lst in listings  %}
+    <div class="container mt-4">
+        <div class="row row-cols-2 row-cols-md-5 g-4">
+        {%  for lst in listings  %}
+                {% if lst.listing.status == "CL" %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="..." class="card-img-top img-fluid"
+                                alt="Image Not Available" 
+                                style="object-fit:contain">
+                            <div class="card-body text-center">
+                                <h5 class="card-title" style="font-size: 1rem;">Listing has been closed</h5>
+                            </div>
+                        </div>
+                    </div>
 
-{% if lst.listing.status == "CL" %}
+                {% else %}
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="{{ lst.listing.url }}" class="card-img-top img-fluid"
+                             alt="Image Not Available" 
+                             style="object-fit:contain">
+                        <div class="card-body text-center">
+                            <h5 class="card-title" style="font-size: 1rem;">{{ lst.listing.title }}</h5>
+                            <p class="card-text" style="font-size: 0.8rem;">Bidding price ${{ lst.listing.price }}</p>
+                            <form action="{% url 'listing_details' listingid=lst.listing.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-primary" name="view_details" type="submit" value="{{ lst.listing.id }}">
+                                    Details</button>
+                            </form>
 
-<h4 style="color:red">This listing is no longer available</h4> 
-
-{% else %}
-
-
-<div style="text-align:center">
-
-    {% csrf_token %}
-  
-<h4 style="color:green">Listing Name: {{lst.listing.title}}</h4> 
-<br><br>
-<h4 style="color:green">Listing Price: ${{lst.listing.price}}</h4> 
-<br><br>
-<img src= {{lst.listing.url}} alt="Image Not Available"  width="225" height="150">
-<br><br>
-
-<form action="{% url 'listing_details' %}" method="POST">
-    
-    {% csrf_token %}
-    <button name="view_details" type="submit" value={{lst.listing.id}}>Go To Listing</button>
-    
-</form>
-
-
-
-
-</div>
-
-
-{% endif %}
-
-<div style="text-align:center">
-
-    <form action="remove_from_watchlist" method="POST">
-        {% csrf_token %} 
-    <input type="hidden"  name="id_lst" value={{lst.listing.id}}>
-    <button type="submit" name="watchlist_remove"  value ="Remove">Remove From Watchlist</button>
-    </form>
-</div>
-
-<br> </br>
-<br> </br>
-
-
-{% endfor %}
+                            <form action="{% url 'remove_from_watchlist' %}" method="POST">
+                                {% csrf_token %} 
+                            <input type="hidden"  name="id_lst" value={{lst.listing.id}}>
+                            <button class="btn btn-primary mt-2" type="submit" name="watchlist_remove"  value ="Remove">Remove From Watchlist</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {%endif%}
+            {% endfor %}
+        </div>
+    </div>    
 
 
 {% endblock %}
