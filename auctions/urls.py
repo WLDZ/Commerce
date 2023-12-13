@@ -18,10 +18,12 @@ urlpatterns = [
     path ("bid_history",views.bid_win_history,name = "bid_history"),
     path ("bid_history_all",views.bid_history,name = "bid_history_all"),
     path ("search",views.search,name = "search"), #remaned it explore in the ui
-    path ("results",views.search_results,name = "results"),
+    path ("results/<str:category>/",views.search_results,name = "results"),
     path ("comment",views.post_comment,name = "comment"),
     path ("test",views.test_page,name = "test")
 
+
+# "{% url 'results' category=category %}
 
    
 

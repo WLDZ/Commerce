@@ -11,7 +11,7 @@
           <div class="card-body d-flex align-items-center justify-content-center">
               <h6 class="card-title" style="font-size: 1rem;">{{ category }}</h6>
           </div>
-          <form class="categoryForm" id="categoryForm_{{ category }}" action="{% url 'results' %}" method="POST" style="display: none;">
+          <form class="categoryForm" id="categoryForm_{{ category }}" action="{% url 'results' category=category %}" method="POST" style="display: none;">
               {% csrf_token %}
               <input type="hidden" name="category" value="{{ category }}">
           </form>

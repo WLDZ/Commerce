@@ -441,22 +441,26 @@ def search(request):
 
 
 @login_required(login_url='/login')
-def search_results(request):
+def search_results(request,category):
+    category = category
+    search_result = Listing.objects.filter(catagory=category)
+    no_results = False
+    if(len(search_result)==0):
+        no_results = True
+
     if request.method == "POST":
             category =  request.POST['category']
-            print(category)
 
-            search_result = Listing.objects.filter(catagory=category)
+    lisitng_paginator = Paginator(search_result,10)
+    page_num = request.GET.get('page')
+    page = lisitng_paginator.get_page(page_num)
+            
 
-            no_results = False
-            if(len(search_result)==0):
-                no_results = True
-
-
-    return render(request, "auctions/my_listings.html",{
-            "listings":search_result,
+    return render(request, "auctions/results.html",{
+            "listings":page,
             "result_ind": True,
-            "no_results":no_results
+            "no_results":no_results,
+            "category":category
             })
 
 

@@ -1,100 +1,62 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
 
 
 {% block body %}
 
-{{closed_ind}}
-
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><h5>{{ message }}</h5></li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-
-{% if closed_ind %}
-
-<h2 style="color:red">This bidding has been closed</h2>
-
+{% if no_results %}
+<h2 style="color: coral;font-family:'Lucida Handwriting';text-align: center;margin-top: 10px;">No Listings Found</h2>
 {% else %}
-
-<h2>Active Listings</h2>
-{% endif %}
-
-<div style="text-align:center">
-
-    {% csrf_token %}
-  
-<h4 style="color:green">Listing Name: {{title}}</h4> 
-<br><br>
-<h4 style="color:green">Listing Price: ${{price}}</h4> 
-<br><br>
-
-<h4 style="color:green">Total Bids Placed: {{totalbids}}</h4> 
-
-{% if user.is_authenticated and not watch_ind  and not closed_ind %}
-
-<form action="remove_from_watchlist" method="POST">
-    {% csrf_token %} 
-<input type="hidden"  name="id_lst" value={{msg}}>
-
-<button type="submit" name="watchlist_remove"  value ="Remove">Remove From Watchlist</button>
-
-</form>
-
-{% endif %}
-
-
-{% if closed_ind %}
-
-<h4 style="color:green">Your Bid Value: ${{bid_won_price}}</h4>
-{% endif %}
-
-
-
-{% if user.is_authenticated and not closed_ind and watch_ind %}
-
-<form action="add_to_watchlist" method="POST" id="form1">
-    {% csrf_token %} 
-    <input type="hidden"  name="lst_id" value={{msg}}>
-
-</form>
-<button type="submit" name="watchlist" form="form1">Add to Watchlist</button>
     
-{% endif %}
 
-
-
-
-{% if user.is_authenticated and not owner_ind %}
-<form action="{% url 'posted' %}" method="POST">  
-    {% csrf_token %}   
-    <label for="bid"> <h4>Place a Bid</h4> </label>
-    <input type="hidden"  name="lstId" value={{msg}}>
-    <input type="number" step="0.01" id="placebid" name = "bid">
-    <input type="submit"  value ="Submit">
- </form>
-
- {% endif %}
-
- <br>
-
-<img src= {{url}} alt="Image Not Available" >
-<br><br>
-
-
-<h4 style="color:green">Discription: {{description}}</h4> 
-
-
+ <div class="container mt-4">
+    <div class="row row-cols-2 row-cols-md-5 g-4">
+        {% for listing in listings %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{{ listing.url }}" class="card-img-top img-fluid"
+                         alt="Image Not Available" 
+                         style="object-fit:contain">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" style="font-size: 1rem;">{{ listing.title }}</h5>
+                        <p class="card-text" style="font-size: 0.8rem;">${{ listing.price }}</p>
+                        <form action="{% url 'listing_details' listingid=listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" name="view_details" type="submit" value="{{ listing.id }}">
+                                Details</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 
-{%  for comment in comments %}
+{% endif %}
 
-<h4>{{comment.comment}} by {{comment.user.username}}</h4> 
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center my-4">
+      {% if listings.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="{% url 'results' category=category  %}?page={{ listings.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo; Previous</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for page_num in listings.paginator.page_range %}
+        <li class="page-item {% if page_num == listings.number %}active{% endif %}">
+          <a class="page-link" href="{% url 'results' category=category  %}?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+      {% endfor %}
+      {% if listings.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{% url 'results' category=category  %}?page={{ listings.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">Next &raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
 
-{% endfor %}
 
 {% endblock %}
