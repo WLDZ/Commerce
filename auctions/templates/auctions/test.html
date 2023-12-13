@@ -1,49 +1,100 @@
 {% extends "auctions/layout.html" %}
 
 
+
 {% block body %}
 
+{{closed_ind}}
 
-<form action="results" method="POST">
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><h5>{{ message }}</h5></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+{% if closed_ind %}
+
+<h2 style="color:red">This bidding has been closed</h2>
+
+{% else %}
+
+<h2>Active Listings</h2>
+{% endif %}
+
+<div style="text-align:center">
+
+    {% csrf_token %}
+  
+<h4 style="color:green">Listing Name: {{title}}</h4> 
+<br><br>
+<h4 style="color:green">Listing Price: ${{price}}</h4> 
+<br><br>
+
+<h4 style="color:green">Total Bids Placed: {{totalbids}}</h4> 
+
+{% if user.is_authenticated and not watch_ind  and not closed_ind %}
+
+<form action="remove_from_watchlist" method="POST">
     {% csrf_token %} 
-    <label for="cars">Choose a listing catagory:</label>
-    <select name="catagory" id="catagory">
-        <option value="Appliances">Appliances</option>
-        <option value="Apps & Games">Apps & Games</option>
-        <option value="Arts, Crafts, & Sewing">Arts, Crafts, & Sewing</option>
-        <option value="Automotive Parts & Accessories">Automotive Parts & Accessories</option>
-        <option value="Baby">Baby</option>
-        <option value="Beauty & Personal Care">Beauty & Personal Care</option>
-        <option value="Books">Books</option>
-        <option value="CDs & Vinyl">CDs & Vinyl</option>
-        <option value="Cell Phones & Accessories">Cell Phones & Accessories</option>
-        <option value="Clothing, Shoes and Jewelry">Clothing, Shoes and Jewelry</option>
-        <option value="Collectibles & Fine Art">Collectibles & Fine Art</option>
-        <option value="Computers">Computers</option>
-        <option value="Electronics">Electronics</option>
-        <option value="Garden & Outdoor">Garden & Outdoor</option>
-        <option value="Grocery & Gourmet Food">Grocery & Gourmet Food</option>
-        <option value="Handmade">Handmade</option>
-        <option value="Health, Household & Baby Care">Health, Household & Baby Care</option>
-        <option value="Home & Kitchen">Home & Kitchen</option>
-        <option value="Industrial & Scientific">Industrial & Scientific</option>
-        <option value="Kindle">Kindle</option>
-        <option value="Luggage & Travel Gear">Luggage & Travel Gear</option>
-        <option value="Movies & TV">Movies & TV</option>
-        <option value="Musical Instruments">Musical Instruments</option>
-        <option value="Office Products">Office Products</option>
-        <option value="Pet Supplies">Pet Supplies</option>
-        <option value="Sports & Outdoors">Sports & Outdoors</option>
-        <option value="Tools & Home Improvement">Tools & Home Improvement</option>
-        <option value="Toys & Games">Toys & Games</option>
-        <option value="Video Games">Video Games</option>
-       
-    </select>
-    <br><br>
-    <input type="submit" value="Search">
-  </form>
-   
+<input type="hidden"  name="id_lst" value={{msg}}>
+
+<button type="submit" name="watchlist_remove"  value ="Remove">Remove From Watchlist</button>
+
+</form>
+
+{% endif %}
 
 
+{% if closed_ind %}
+
+<h4 style="color:green">Your Bid Value: ${{bid_won_price}}</h4>
+{% endif %}
+
+
+
+{% if user.is_authenticated and not closed_ind and watch_ind %}
+
+<form action="add_to_watchlist" method="POST" id="form1">
+    {% csrf_token %} 
+    <input type="hidden"  name="lst_id" value={{msg}}>
+
+</form>
+<button type="submit" name="watchlist" form="form1">Add to Watchlist</button>
+    
+{% endif %}
+
+
+
+
+{% if user.is_authenticated and not owner_ind %}
+<form action="{% url 'posted' %}" method="POST">  
+    {% csrf_token %}   
+    <label for="bid"> <h4>Place a Bid</h4> </label>
+    <input type="hidden"  name="lstId" value={{msg}}>
+    <input type="number" step="0.01" id="placebid" name = "bid">
+    <input type="submit"  value ="Submit">
+ </form>
+
+ {% endif %}
+
+ <br>
+
+<img src= {{url}} alt="Image Not Available" >
+<br><br>
+
+
+<h4 style="color:green">Discription: {{description}}</h4> 
+
+
+</div>
+
+{%  for comment in comments %}
+
+<h4>{{comment.comment}} by {{comment.user.username}}</h4> 
+
+{% endfor %}
 
 {% endblock %}

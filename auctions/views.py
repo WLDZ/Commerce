@@ -400,7 +400,7 @@ def remove_from_watchlist(request):
               messages.success(request, 'Removed from your wishlist')
               return render(request, "auctions/success.html")
 
-
+@login_required(login_url='/login')
 def my_watchlist(request):
     if request.user.is_authenticated:
         usr = request.user
@@ -410,7 +410,7 @@ def my_watchlist(request):
             })
 
 
-
+@login_required(login_url='/login')
 def search(request):
     categories = [
     "Appliances",
@@ -439,6 +439,8 @@ def search(request):
             })
 
 
+
+@login_required(login_url='/login')
 def search_results(request):
     if request.method == "POST":
             category =  request.POST['category']
@@ -458,6 +460,7 @@ def search_results(request):
             })
 
 
+@login_required(login_url='/login')
 def post_comment(request):
     if request.user.is_authenticated:
         usr = request.user
