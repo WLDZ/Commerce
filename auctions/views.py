@@ -441,8 +441,8 @@ def search(request):
 
 
 @login_required(login_url='/login')
-def search_results(request,category):
-    category = category
+def search_results(request,category): # 2nd parameter is very important, if you want to view the page after refresh
+    category = category  # for get method, if the page is refreshed.
     search_result = Listing.objects.filter(catagory=category)
     no_results = False
     if(len(search_result)==0):

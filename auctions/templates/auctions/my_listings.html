@@ -1,18 +1,9 @@
 {% extends "auctions/layout.html" %}
-
+{%load static%}
 
 
 {% block body %}
 
-{% if result_ind %}
-
-<h2 style="color:blue">Search Results</h2>
-
-{% else %}
-<h2 style="color:blue">Active Listings</h2>
-
-
-{% endif %}
 
 {% if no_results %}
 
@@ -20,43 +11,37 @@
 <h2>No Listings Found</h2>
 
 
-
 {% else %}
     
 
- {%  for listing in listings  %}
+<div class="container mt-4">
+    <div class="row row-cols-2 row-cols-md-5 g-4">
+        {% for listing in listings %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{{ listing.url }}" class="card-img-top img-fluid"
+                         alt="Image Not Available" 
+                         style="object-fit:contain">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" style="font-size: 1rem;">{{ listing.title }}</h5>
+                        <p class="card-text" style="font-size: 0.8rem;">${{ listing.price }}</p>
+                        <form action="{% url 'listing_details' listingid=listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" name="view_details" type="submit" value="{{ listing.id }}">
+                                Details</button>
+                            {% if not result_ind %}
+                                <button class="btn btn-primary" name="close_listing" type="submit" value={{listing.id}}>Close Listing</button>
 
-<div style="text-align:center">
-
-<h4>Listing: {{listing.title}}</h4> 
-<br>
-<img src= {{listing.url}} alt="Image Not Available" width="225" height="150">
-<br>
-<h3>Price: ${{listing.price}}  </h4>
-<br>
-
-<form action="{% url 'listing_details' listingid=listing.id %}" method="POST">
-    {% csrf_token %}
-    <button name="view_details" type="submit" value={{listing.id}}>Detials</button>
-</form>
-
-
-
-{% if not result_ind %}
-<form action="{% url 'close_listing' %}" method="POST">
-    {% csrf_token %}
-    <button name="close_listing" type="submit" value={{listing.id}}>Close Listing</button>
-</form>
-
-{% endif %}
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
-<br>
 
 
-
-
-
-{% endfor %}
 
 
 {% endif %}
