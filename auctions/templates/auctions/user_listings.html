@@ -130,7 +130,7 @@
             <div class="rightalign" style="text-align: right;">
     
                 {% if user.is_authenticated and not watch_ind and not closed_ind %}
-                    <form action="remove_from_watchlist" method="POST" class="watchlist-form">
+                    <form action="{% url 'remove_from_watchlist' %}" method="POST" class="watchlist-form">
                         {% csrf_token %}
                         <input type="hidden" name="id_lst" value="{{ msg }}">
                         <button type="submit" name="watchlist_remove" value="Remove" class="btn btn-danger">Remove From Watchlist</button>
@@ -142,7 +142,7 @@
                 {% endif %}
     
                 {% if user.is_authenticated and not closed_ind and watch_ind and not owner_ind %}
-                    <form action="add_to_watchlist" method="POST" id="form1" class="watchlist-form">
+                    <form action="{% url 'add_to_watchlist' %}" method="POST" id="form1" class="watchlist-form">
                         {% csrf_token %}
                         <input type="hidden" name="lst_id" value="{{ msg }}">
                         <button type="submit" name="watchlist" form="form1" class="btn btn-primary" style="background-color:#198754;">Add to Watchlist</button>
