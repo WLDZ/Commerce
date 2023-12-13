@@ -2,26 +2,28 @@
 
 
 {% block body %}
-    <h2 style="color:blue">Your Bidding History</h2>
+    <h2 style="color: coral;font-family:'Lucida Handwriting';text-align: center;margin-top: 10px;">
+        Your Bidding History</h2>
+
 
 
 {% if hist_ind %}
 
 <div class="container mt-4">
     <div class="row row-cols-2 row-cols-md-5 g-4">
-        {%  for win in biddings_won  %}
+        {%  for placed in biddings_placed  %}
             <div class="col">
                 <div class="card h-100">
-                    <img src="{{ win.listing.url }}" class="card-img-top img-fluid"
+                    <img src="{{ placed.listing.url }}" class="card-img-top img-fluid"
                          alt="Image Not Available" 
                          style="object-fit:contain">
                     <div class="card-body text-center">
-                        <h5 class="card-title" style="font-size: 1rem;">{{ win.listing.title }}</h5>
-                        <p class="card-text" style="font-size: 0.8rem;">You bid ${{ win.bid_value }}</p>
-                        <p class="card-text" style="font-size: 0.8rem;">Bidding base price ${{ win.listing.price }}</p>
-                        <form action="{% url 'listing_details' listingid=win.listing.id %}" method="POST">
+                        <h5 class="card-title" style="font-size: 1rem;">{{ placed.listing.title }}</h5>
+                        <p class="card-text" style="font-size: 0.8rem;">You bid ${{ placed.bid_value }}</p>
+                        <p class="card-text" style="font-size: 0.8rem;">Bidding base price ${{ placed.listing.price }}</p>
+                        <form action="{% url 'listing_details' listingid=placed.listing.id %}" method="POST">
                             {% csrf_token %}
-                            <button class="btn btn-primary" name="view_details" type="submit" value="{{ win.listing.id }}">
+                            <button class="btn btn-primary" name="view_details" type="submit" value="{{ placed.listing.id }}">
                                 Details</button>
                         </form>
                     </div>
@@ -35,27 +37,27 @@
 
 {% else %}
 
-<h5 style="color:red">You have not placed any bid yet</h5> 
+<h2 style="color: coral;font-family:'Lucida Handwriting';">You have not placed any bid yet</h2> 
 
 {% endif %}
 
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center my-4">
-      {% if biddings_won.has_previous %}
+      {% if biddings_placed.has_previous %}
         <li class="page-item">
-          <a class="page-link" href="{% url 'bid_history_all'%}?page={{ biddings_won.previous_page_number }}" aria-label="Previous">
+          <a class="page-link" href="{% url 'bid_history_all'%}?page={{ biddings_placed.previous_page_number }}" aria-label="Previous">
             <span aria-hidden="true">&laquo; Previous</span>
           </a>
         </li>
       {% endif %}
-      {% for page_num in biddings_won.paginator.page_range %}
-        <li class="page-item {% if page_num == biddings_won.number %}active{% endif %}">
+      {% for page_num in biddings_placed.paginator.page_range %}
+        <li class="page-item {% if page_num == biddings_placed.number %}active{% endif %}">
           <a class="page-link" href="{% url 'bid_history_all' %}?page={{ page_num }}">{{ page_num }}</a>
         </li>
       {% endfor %}
-      {% if biddings_won.has_next %}
+      {% if biddings_placed.has_next %}
         <li class="page-item">
-          <a class="page-link" href="{% url 'bid_history_all' %}?page={{ biddings_won.next_page_number }}" aria-label="Next">
+          <a class="page-link" href="{% url 'bid_history_all' %}?page={{ biddings_placed.next_page_number }}" aria-label="Next">
             <span aria-hidden="true">Next &raquo;</span>
           </a>
         </li>

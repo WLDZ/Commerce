@@ -135,15 +135,15 @@ def bid_history(request):
 
         hist_ind = False
 
-        biddings_won = Bid.objects.filter(user=id_user,win_status= "PD")
-        if (len(biddings_won)>0):
+        biddings_placed = Bid.objects.filter(user=id_user,win_status= "PD")
+        if (len(biddings_placed)>0):
             hist_ind = True
 
-        lisitng_paginator = Paginator(biddings_won,10)
+        lisitng_paginator = Paginator(biddings_placed,10)
         page_num = request.GET.get('page')
         page = lisitng_paginator.get_page(page_num)
         return render(request, "auctions/history_bid.html",{
-            "biddings_won": page,
+            "biddings_placed": page,
             "hist_ind": hist_ind
             })   
 
