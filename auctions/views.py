@@ -249,9 +249,15 @@ def place_bid(request):
 
         listing = Listing.objects.filter(id=lsting_id)
         listing_price = listing[0].price
+        listing_url = listing[0].url
+
+        images = ["https://picsum.photos/200/300", "https://picsum.photos/200/300"]
+        images.insert(0, listing_url)
 
 
         bid_price = Bid.objects.filter(listing_id=lsting_id)
+        usr_comments = Comment.objects.filter(listing_id=lsting_id)
+        bid_count = Bid.objects.filter(listing_id=lsting_id).count()
         
         if (len(bid_price) == 0):
             max_bid = 0
@@ -260,18 +266,13 @@ def place_bid(request):
 
         if (float(bid) < float(listing_price)):
 
-
-            usr_comments = Comment.objects.filter(listing_id=lsting_id)
-
-            bid_count = Bid.objects.filter(listing_id=lsting_id).count()
-
-            messages.error(request, 'Bid should be greater than the price of listing')
+            messages.error(request, '!!!Bid should be greater than the price of listing')
 
             return render(request, "auctions/user_listings.html",{
             "msg": lsting_id,
             "title":listing[0].title,
             "description" : listing[0].description,
-            "url": listing[0].url,
+            "url": images,
             "price": listing_price,
             "comments": usr_comments,
             "totalbids":bid_count,         
@@ -284,17 +285,32 @@ def place_bid(request):
         
         elif (float(bid) < float(max_bid)):
 
-            usr_comments = Comment.objects.filter(listing_id=lsting_id)
-
-            bid_count = Bid.objects.filter(listing_id=lsting_id).count()
-
             messages.error(request, 'Bid should be greater than the existing bid placed')
 
             return render(request, "auctions/user_listings.html",{
             "msg": lsting_id,
             "title":listing[0].title,
             "description": listing[0].description,
-            "url": listing[0].url,
+            "url": images,
+            "price": listing_price,
+            "comments": usr_comments,
+            "totalbids":bid_count,         
+            "watch_ind":watch_ind,
+            "owner_ind":item_onwer,
+            "closed_ind":closed_ind,
+            "bid_won_price":bid_won_price
+        })
+
+
+        elif (item_onwer): # owner of a listing should not bid for his own listing
+
+            messages.error(request, 'Owner cannot bid')
+
+            return render(request, "auctions/user_listings.html",{
+            "msg": lsting_id,
+            "title":listing[0].title,
+            "description": listing[0].description,
+            "url": images,
             "price": listing_price,
             "comments": usr_comments,
             "totalbids":bid_count,         

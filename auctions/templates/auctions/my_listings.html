@@ -1,49 +1,69 @@
-{% extends "auctions/layout.html" %}
-{%load static%}
+{% extends "auctions/layout.html" %} {%load static%} {% block body %}
 
+<style>
+  .button-margin {
+    margin-right: 5px; /* Adjust the value as needed for your desired margin */
+  }
+</style>
 
-{% block body %}
-
+<!-- -->
 
 {% if no_results %}
 
-
 <h2>No Listings Found</h2>
 
-
 {% else %}
-    
 
 <div class="container mt-4">
-    <div class="row row-cols-2 row-cols-md-5 g-4">
-        {% for listing in listings %}
-            <div class="col">
-                <div class="card h-100">
-                    <img src="{{ listing.url }}" class="card-img-top img-fluid"
-                         alt="Image Not Available" 
-                         style="object-fit:contain">
-                    <div class="card-body text-center">
-                        <h5 class="card-title" style="font-size: 1rem;">{{ listing.title }}</h5>
-                        <p class="card-text" style="font-size: 0.8rem;">${{ listing.price }}</p>
-                        <form action="{% url 'listing_details' listingid=listing.id %}" method="POST">
-                            {% csrf_token %}
-                            <button class="btn btn-primary" name="view_details" type="submit" value="{{ listing.id }}">
-                                Details</button>
-                            {% if not result_ind %}
-                                <button class="btn btn-primary" name="close_listing" type="submit" value={{listing.id}}>Close Listing</button>
+  <div class="row row-cols-2 row-cols-md-5 g-4">
+    {% for listing in listings %}
+    <div class="col">
+      <div class="card h-100">
+        <img
+          src="{{ listing.url }}"
+          class="card-img-top img-fluid"
+          alt="Image Not Available"
+          style="object-fit: contain"
+        />
+        <div class="card-body text-center">
+          <h5 class="card-title" style="font-size: 1rem">
+            {{ listing.title }}
+          </h5>
+          <p class="card-text" style="font-size: 0.8rem">
+            ${{ listing.price }}
+          </p>
+        </div>
 
-                            {% endif %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+        <form
+          class="d-flex justify-content-center"
+          action="{% url 'listing_details' listingid=listing.id %}"
+          method="POST"
+        >
+          {% csrf_token %}
+          <button
+            class="btn btn-primary button-margin"
+            name="view_details"
+            type="submit"
+            value="{{ listing.id }}"
+          >
+            Details
+          </button>
+
+          {% if not result_ind %}
+          <button
+            class="btn btn-primary"
+            name="close_listing"
+            type="submit"
+            value="{{listing.id}}"
+          >
+            Close Listing
+          </button>
+          {% endif %}
+        </form>
+      </div>
     </div>
+    {% endfor %}
+  </div>
 </div>
 
-
-
-
-{% endif %}
-
-{% endblock %}
+{% endif %} {% endblock %}

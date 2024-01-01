@@ -11,10 +11,12 @@
 
 <ul class="messages">
     {% for message in messages %}
-    <h3  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </h3>
+        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     {% endfor %}
 </ul>
-
 
 <div class="container text-center">
     <div class="row">
@@ -89,6 +91,11 @@
                                 <button type="submit" class="btn btn-primary" style="background-color:#198754;">Submit</button>
                             </div>
                         </form>
+
+
+                    {% elif user.is_authenticated and owner_ind and not closed_ind %}
+                    <h5 class="text-warning">You are the owner of this list. Hence you cannot bid</h5>    
+
                     {% endif %}
                 </div>
                 
