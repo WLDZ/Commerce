@@ -28,7 +28,7 @@ body {
   overflow: hidden;
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 767px) {
   .container-left {
     display: none;
   }
