@@ -1,16 +1,53 @@
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
+}
+
+.container-left {
+  width: 70%;
+  float: left;
+  background: url("/static/auctions/background/background1.jpg");
   background-size: cover;
   background-position: center;
   height: 100vh;
+  overflow: hidden;
 }
 
-.card {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Adjust the alpha value for transparency */
+.container-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  float: left;
+  box-sizing: border-box;
+  background-color: rgba(76, 2, 2, 0.4); /* Cornsilk with 70% opacity */
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1200px) {
+  .container-left {
+    display: none;
+  }
+
+  .container-right {
+    width: 100%;
+    background: url("/static/auctions/background/background1.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+.container-right .card {
+  margin-top: -150px; /* Adjust the value as needed to move it higher */
+}
+
+.container-right .card .card-header {
+  background-color: #20b2aa; /* Change header color to #20b2aa */
+  color: #fff; /* Text color for header */
 }
