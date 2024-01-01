@@ -48,18 +48,26 @@
           >
             Details
           </button>
+        </form>
 
-          {% if not result_ind %}
+        {% if not result_ind %}
+        <form
+          class="d-flex justify-content-center"
+          action="{% url 'close_listing' %}"
+          method="POST"
+        >
+          {% csrf_token %}
           <button
-            class="btn btn-primary"
+            class="btn btn-primary button-margin mt-2"
             name="close_listing"
             type="submit"
-            value="{{listing.id}}"
+            value="{{ listing.id }}"
           >
             Close Listing
           </button>
-          {% endif %}
         </form>
+
+        {% endif %}
       </div>
     </div>
     {% endfor %}
