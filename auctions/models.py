@@ -99,7 +99,7 @@ class Listing(models.Model):
         User, on_delete=models.CASCADE, null=True, related_name="item_owner")
 
     title = models.CharField(max_length=50,default='Title')
-    description = models.CharField(max_length=150, default='Description')
+    description = models.CharField(max_length=1500, default='Description')
     url = models.URLField(max_length=1000, null=True)
   
     price = models.FloatField(default=0.00)
